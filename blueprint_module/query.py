@@ -1,7 +1,41 @@
-import openai, dirtyjson
+from openai import OpenAI
 from flask import request, jsonify
 from . import blueprint
 from blueprint_module import blueprint
+from dotenv import load_dotenv
+import os
+import json
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Initialize OpenAI API
+api_key = os.getenv("api_key")
+
+import re
+
+
+def remove_prefix(text):
+    # Strip leading/trailing whitespace
+    text = text.strip()
+    
+    # Regular expression to match prefixes
+    # This regex matches:
+    # 1. One or more words (letters, numbers, underscores)
+    # 2. Optionally followed by single quotes, double quotes, or triple quotes
+    # 3. At the start of the string
+    prefix_pattern = r'^(\w+\s*)+[\'"""]*'
+    
+    # Remove the prefix
+    cleaned_text = re.sub(prefix_pattern, '', text)
+    
+    # Strip any leading/trailing quotes and whitespace
+    cleaned_text = cleaned_text.strip('\'"'' ')
+    
+    return cleaned_text
+
+
+
 
 
 # OpenAI Prompt Parameters
@@ -78,8 +112,9 @@ Essay:
 """
 
     # Query response from OpenAI
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k",
+    client = OpenAI(api_key=api_key)
+    response = client.chat.completions.create(
+        model="gpt-4o",
         messages=[
             {
                 "role": "system",
@@ -89,9 +124,17 @@ Essay:
         ],
         temperature=0.1,
         top_p=0.3,
+        # response_format=jsonify
     )
+    response = response.choices[0].message.content
+    cleaned_text = re.sub(r'(```json?|json```|\`{3})', '', response)
+    import ast
+    cleaned_text = ast.literal_eval(cleaned_text)
+    return jsonify(cleaned_text)
 
-    print(response)
+
 
     # Return OpenAI response in JSON format
-    return jsonify(dirtyjson.loads(response["choices"][0]["message"]["content"]))
+    # return response
+
+

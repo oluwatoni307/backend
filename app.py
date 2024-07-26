@@ -1,14 +1,10 @@
-import openai, os, dirtyjson
+import openai, os
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_cors import CORS
 from blueprint_module import blueprint
 
-# Load env variables from .env
-load_dotenv()
 
-# Set OpenAI API Key
-openai.api_key = os.getenv("API_KEY")
 
 # Create application server
 app = Flask(__name__)
@@ -23,3 +19,6 @@ CORS(app)
 @app.route("/")
 def index():
     return "hi!!!!"
+
+if __name__ == "__main__":
+    app.run(debug=True)
