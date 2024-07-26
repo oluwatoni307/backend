@@ -47,9 +47,17 @@ Respond back with graded points and a level for each criteria. Don't rewrite the
 Your grade should only be below 70% if the essay does not succeed at all in any of the criteria. Your grade should only be below 80% if the essay is not sufficient in most of the criteria. Your grade should only be below 90% if there are a few criteria where the essay doesn't excell. Your grade should only be above 90% if the essay succeeds in most of the criteria.
 Understand that the essay was written by a human and think about their writing expectations for their grade level/course level, be lenient and give the student the benefit of the doubt.
 
+Additionally, provide a Reliability Index, which is a score from 0 to 100 indicating how confident you are in your assessment of the essay. A score of 0 means you have no confidence in your assessment, while a score of 100 means you are completely confident in your assessment.
+
 Give me your entire response in JSON format for easy processing.
 Response Format:
-[{"Criteria": "...", "Level": "4", "Feedback": "Student must..."}, {"Grade": "B", "Percentage": "85%"}, {"Feedback": "Some suggestions to improve..."}] where you create a Criteria object for each individual criteria, and Grade represents the overall assignment grade. Write out a list of bullet points regarding the specific suggestions in their essay with references to examples in the essay. as a "Feedback" key.
+[
+    {"Criteria": "...", "Level": "4", "Feedback": "Student must..."},
+    {"Grade": "B", "Percentage": "85%"},
+    {"Feedback": "Some suggestions to improve..."},
+    {"ReliabilityIndex": 85}
+]
+where you create a Criteria object for each individual criteria, Grade represents the overall assignment grade, Feedback is a list of bullet points regarding the specific suggestions in their essay with references to examples in the essay, and ReliabilityIndex is your confidence score in the assessment.
 """
 
 
